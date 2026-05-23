@@ -1,0 +1,143 @@
+:root {
+  color-scheme: light;
+}
+
+.dark {
+  color-scheme: dark;
+}
+
+.editor-panel {
+  display: flex;
+  min-height: 420px;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgb(203 213 225);
+  border-radius: 8px;
+  background: rgb(255 255 255);
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.06);
+}
+
+.dark .editor-panel {
+  border-color: rgb(51 65 85);
+  background: rgb(15 23 42);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
+}
+
+.editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid rgb(226 232 240);
+  padding: 10px 12px;
+}
+
+.dark .editor-header {
+  border-bottom-color: rgb(51 65 85);
+}
+
+.code-area {
+  min-height: 0;
+  flex: 1;
+  resize: none;
+  border: 0;
+  background: transparent;
+  padding: 16px;
+  font-family: Consolas, Monaco, "Courier New", monospace;
+  font-size: 14px;
+  line-height: 1.65;
+  tab-size: 2;
+  outline: none;
+  white-space: pre;
+  overflow: auto;
+}
+
+.code-area::placeholder {
+  color: rgb(148 163 184);
+}
+
+.code-area:focus {
+  box-shadow: inset 0 0 0 2px rgb(59 130 246);
+}
+
+.action-btn {
+  width: 100%;
+  min-width: 92px;
+  border-radius: 6px;
+  border: 1px solid rgb(203 213 225);
+  background: rgb(255 255 255);
+  padding: 10px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgb(51 65 85);
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.05);
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.action-btn:hover {
+  background: rgb(241 245 249);
+  transform: translateY(-1px);
+}
+
+.action-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(59 130 246 / 0.35);
+}
+
+.primary-btn {
+  border-color: rgb(37 99 235);
+  background: rgb(37 99 235);
+  color: white;
+}
+
+.primary-btn:hover {
+  background: rgb(29 78 216);
+}
+
+.danger-btn {
+  border-color: rgb(254 202 202);
+  color: rgb(185 28 28);
+}
+
+.danger-btn:hover {
+  background: rgb(254 242 242);
+}
+
+.dark .action-btn {
+  border-color: rgb(71 85 105);
+  background: rgb(15 23 42);
+  color: rgb(226 232 240);
+}
+
+.dark .action-btn:hover {
+  background: rgb(30 41 59);
+}
+
+.dark .primary-btn {
+  border-color: rgb(59 130 246);
+  background: rgb(59 130 246);
+  color: white;
+}
+
+.dark .primary-btn:hover {
+  background: rgb(37 99 235);
+}
+
+.dark .danger-btn {
+  border-color: rgb(127 29 29);
+  color: rgb(252 165 165);
+}
+
+.dark .danger-btn:hover {
+  background: rgb(69 10 10);
+}
+
+@media (max-width: 1023px) {
+  .editor-panel {
+    min-height: 320px;
+  }
+
+  .action-btn {
+    width: auto;
+  }
+}

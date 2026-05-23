@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON Formatter & Beautifier</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class"
+    };
+  </script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900 transition-colors duration-200 dark:bg-slate-950 dark:text-slate-100">
+  <main class="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-5 px-4 py-5 sm:px-6 lg:px-8">
+    <header class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h1 class="text-2xl font-semibold tracking-tight sm:text-3xl">JSON Formatter & Beautifier</h1>
+        <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Format, minify, copy, and validate JSON in your browser.</p>
+      </div>
+
+      <button
+        id="themeToggle"
+        type="button"
+        class="inline-flex h-10 items-center justify-center rounded-md border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800 dark:focus:ring-offset-slate-950"
+        aria-pressed="false"
+      >
+        Dark Mode
+      </button>
+    </header>
+
+    <section class="grid flex-1 gap-4 lg:grid-cols-[1fr_auto_1fr]">
+      <div class="editor-panel">
+        <div class="editor-header">
+          <label for="jsonInput" class="text-sm font-semibold">Input JSON</label>
+          <span class="text-xs text-slate-500 dark:text-slate-400">Raw JSON</span>
+        </div>
+        <textarea
+          id="jsonInput"
+          class="code-area"
+          spellcheck="false"
+          placeholder='{"name":"JSON Beauty","features":["format","minify","copy"]}'
+        ></textarea>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-center gap-2 lg:w-32 lg:flex-col">
+        <button id="formatBtn" type="button" class="action-btn primary-btn">Beautify</button>
+        <button id="minifyBtn" type="button" class="action-btn">Minify</button>
+        <button id="copyBtn" type="button" class="action-btn">Copy</button>
+        <button id="clearBtn" type="button" class="action-btn danger-btn">Clear</button>
+      </div>
+
+      <div class="editor-panel">
+        <div class="editor-header">
+          <label for="jsonOutput" class="text-sm font-semibold">Output</label>
+          <span id="statusText" class="text-xs text-slate-500 dark:text-slate-400">Ready</span>
+        </div>
+        <textarea
+          id="jsonOutput"
+          class="code-area"
+          spellcheck="false"
+          readonly
+          placeholder="Formatted JSON will appear here."
+        ></textarea>
+      </div>
+    </section>
+
+    <p id="errorMessage" class="min-h-6 text-sm font-medium text-red-600 dark:text-red-400" role="alert" aria-live="polite"></p>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
