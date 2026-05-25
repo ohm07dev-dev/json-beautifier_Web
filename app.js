@@ -57,7 +57,205 @@ function getErrorPosition(error, text) {
   return null;
 }
 
-function renderInputHighlight(errorPosition = null) {
+function getPreviousNonWhitespace(text, position) {
+  for (let index = position - 1; index >= 0; index -= 1) {
+    if (!/\s/.test(text[index])) {
+      return { char: text[index], index };
+    }
+  }
+
+  return { char: "", index: -1 };
+}
+
+function getNextNonWhitespace(text, position) {
+  for (let index = position + 1; index < text.length; index += 1) {
+    if (!/\s/.test(text[index])) {
+      return { char: text[index], index };
+    }
+  }
+
+  return { char: "", index: -1 };
+}
+
+function addIssuePosition(positions, position) {
+  if (position >= 0) {
+    positions.add(position);
+  }
+}
+
+function findLikelyJsonIssuePositions(text) {
+  const positions = new Set();
+  const stack = [];
+  let inString = false;
+  let escaped = false;
+  let stringStart = -1;
+
+  for (let index = 0; index < text.length; index += 1) {
+    const char = text[index];
+
+    if (inString) {
+      if (escaped) {
+        if (!["\"", "\\", "/", "b", "f", "n", "r", "t", "u"].includes(char)) {
+          addIssuePosition(positions, index - 1);
+        }
+
+        if (char === "u") {
+          const hexValue = text.slice(index + 1, index + 5);
+
+          if (!/^[0-9a-fA-F]{4}$/.test(hexValue)) {
+            addIssuePosition(positions, index);
+          }
+        }
+
+        escaped = false;
+        continue;
+      }
+
+      if (char === "\\") {
+        escaped = true;
+        continue;
+      }
+
+      if (char === "\"") {
+        inString = false;
+        stringStart = -1;
+        continue;
+      }
+
+      if (char === "\n" || char === "\r") {
+        addIssuePosition(positions, stringStart);
+        inString = false;
+        stringStart = -1;
+      }
+
+      continue;
+    }
+
+    if (char === "\"") {
+      inString = true;
+      stringStart = index;
+      continue;
+    }
+
+    if (/\s/.test(char) || char === ":" || char === "-" || /[0-9]/.test(char)) {
+      continue;
+    }
+
+    if (char === "{") {
+      stack.push({ char, index });
+      continue;
+    }
+
+    if (char === "[") {
+      stack.push({ char, index });
+      continue;
+    }
+
+    if (char === "}" || char === "]") {
+      const opener = stack.pop();
+      const expectedOpener = char === "}" ? "{" : "[";
+
+      if (!opener || opener.char !== expectedOpener) {
+        addIssuePosition(positions, index);
+      }
+
+      continue;
+    }
+
+    if (char === ",") {
+      const previous = getPreviousNonWhitespace(text, index);
+      const next = getNextNonWhitespace(text, index);
+
+      if (
+        previous.char === "{" ||
+        previous.char === "[" ||
+        previous.char === "," ||
+        next.char === "}" ||
+        next.char === "]" ||
+        next.char === ","
+      ) {
+        addIssuePosition(positions, index);
+      }
+
+      continue;
+    }
+
+    if (char === "'") {
+      addIssuePosition(positions, index);
+      let end = index + 1;
+
+      while (end < text.length && text[end] !== "'" && text[end] !== "\n" && text[end] !== "\r") {
+        end += 1;
+      }
+
+      if (text[end] === "'") {
+        addIssuePosition(positions, end);
+        index = end;
+      }
+
+      continue;
+    }
+
+    if (char === "/" && (text[index + 1] === "/" || text[index + 1] === "*")) {
+      addIssuePosition(positions, index);
+
+      if (text[index + 1] === "/") {
+        while (index < text.length && text[index] !== "\n" && text[index] !== "\r") {
+          index += 1;
+        }
+      } else {
+        index += 2;
+
+        while (index < text.length - 1 && !(text[index] === "*" && text[index + 1] === "/")) {
+          index += 1;
+        }
+      }
+
+      continue;
+    }
+
+    if (/[A-Za-z_$]/.test(char)) {
+      let end = index + 1;
+
+      while (end < text.length && /[A-Za-z0-9_$]/.test(text[end])) {
+        end += 1;
+      }
+
+      const token = text.slice(index, end);
+      const next = getNextNonWhitespace(text, end - 1);
+
+      if (!["true", "false", "null"].includes(token)) {
+        addIssuePosition(positions, index);
+      } else if (next.char === ":") {
+        addIssuePosition(positions, index);
+      }
+
+      index = end - 1;
+      continue;
+    }
+
+    if (![".", "+", "e", "E"].includes(char)) {
+      addIssuePosition(positions, index);
+    }
+  }
+
+  if (inString) {
+    addIssuePosition(positions, stringStart);
+  }
+
+  stack.forEach((opener) => addIssuePosition(positions, opener.index));
+
+  return [...positions];
+}
+
+function normalizeErrorPositions(positions) {
+  return [...new Set(positions)]
+    .filter((position) => position !== null && !Number.isNaN(position))
+    .map((position) => Math.max(0, Math.min(position, input.value.length)))
+    .sort((first, second) => first - second);
+}
+
+function renderInputHighlight(errorPositions = []) {
   inputHighlight.textContent = "";
 
   if (!input.value) {
@@ -65,23 +263,33 @@ function renderInputHighlight(errorPosition = null) {
     return;
   }
 
-  if (errorPosition === null || Number.isNaN(errorPosition)) {
+  const markerPositions = normalizeErrorPositions(Array.isArray(errorPositions) ? errorPositions : [errorPositions]);
+
+  if (!markerPositions.length) {
     inputHighlight.textContent = input.value;
     return;
   }
 
-  const markerPosition = Math.max(0, Math.min(errorPosition, input.value.length));
-  const tokenStart = markerPosition >= input.value.length ? Math.max(0, input.value.length - 1) : markerPosition;
-  const tokenEnd = Math.min(input.value.length, tokenStart + 1);
-  const before = input.value.slice(0, tokenStart);
-  const token = input.value.slice(tokenStart, tokenEnd) || " ";
-  const after = input.value.slice(tokenEnd);
-  const marker = document.createElement("span");
+  let currentPosition = 0;
 
-  inputHighlight.append(document.createTextNode(before));
-  marker.className = "json-error-token";
-  marker.textContent = token;
-  inputHighlight.append(marker, document.createTextNode(after));
+  markerPositions.forEach((markerPosition) => {
+    const tokenStart = markerPosition >= input.value.length ? Math.max(0, input.value.length - 1) : markerPosition;
+    const tokenEnd = Math.min(input.value.length, tokenStart + 1);
+
+    if (tokenStart < currentPosition) {
+      return;
+    }
+
+    const marker = document.createElement("span");
+
+    inputHighlight.append(document.createTextNode(input.value.slice(currentPosition, tokenStart)));
+    marker.className = "json-error-token";
+    marker.textContent = input.value.slice(tokenStart, tokenEnd) || " ";
+    inputHighlight.append(marker);
+    currentPosition = tokenEnd;
+  });
+
+  inputHighlight.append(document.createTextNode(input.value.slice(currentPosition)));
 }
 
 function syncHighlightScroll() {
@@ -108,12 +316,14 @@ function handleJsonAction(transformer, successMessage) {
     setStatus(successMessage);
   } catch (error) {
     const errorPosition = getErrorPosition(error, input.value);
+    const likelyIssuePositions = findLikelyJsonIssuePositions(input.value);
+    const allErrorPositions = normalizeErrorPositions([errorPosition, ...likelyIssuePositions]);
     const errorLocation = errorPosition === null ? "" : getLineColumn(input.value, errorPosition);
     output.value = "";
-    renderInputHighlight(errorPosition);
+    renderInputHighlight(allErrorPositions);
     setError(
       errorLocation
-        ? `Invalid JSON at line ${errorLocation.line}, column ${errorLocation.column}: ${error.message}`
+        ? `Invalid JSON at line ${errorLocation.line}, column ${errorLocation.column}: ${error.message}${allErrorPositions.length > 1 ? ` (${allErrorPositions.length} possible issues highlighted)` : ""}`
         : `Invalid JSON: ${error.message}`
     );
   }
