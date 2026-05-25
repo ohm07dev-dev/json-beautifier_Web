@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ohm07dev-dev.github.io/json-beautifier_Web/sitemap.xml

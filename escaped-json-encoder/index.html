@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JSON Formatter & Beautifier Online | JSON Beauty</title>
-  <meta name="description" content="Format, beautify, minify, validate, and encode JSON strings online. A fast browser-based JSON formatter with error highlighting and copy tools.">
+  <title>Escaped JSON Encoder | Encode JSON String Online</title>
+  <meta name="description" content="Encode JSON into an escaped JSON string online, such as converting JSON objects into strings like &quot;{\&quot;customer\&quot;:{\&quot;name\&quot;:\&quot;John\&quot;}}&quot;. Useful for Talend and developer workflows.">
   <meta name="robots" content="index,follow">
-  <link rel="canonical" href="https://ohm07dev-dev.github.io/json-beautifier_Web/">
-  <meta property="og:title" content="JSON Formatter & Beautifier Online">
-  <meta property="og:description" content="Beautify, minify, validate, and encode JSON strings directly in your browser.">
+  <link rel="canonical" href="https://ohm07dev-dev.github.io/json-beautifier_Web/escaped-json-encoder/">
+  <meta property="og:title" content="Escaped JSON Encoder">
+  <meta property="og:description" content="Encode JSON objects into escaped JSON strings for Talend and developer workflows.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://ohm07dev-dev.github.io/json-beautifier_Web/">
+  <meta property="og:url" content="https://ohm07dev-dev.github.io/json-beautifier_Web/escaped-json-encoder/">
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
-      "name": "JSON Formatter & Beautifier",
-      "url": "https://ohm07dev-dev.github.io/json-beautifier_Web/",
+      "name": "Escaped JSON Encoder",
+      "url": "https://ohm07dev-dev.github.io/json-beautifier_Web/escaped-json-encoder/",
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "Any",
-      "description": "Online JSON formatter, beautifier, minifier, validator, and escaped JSON string encoder."
+      "description": "Encode JSON into escaped JSON strings and use the same tool to format, minify, validate, and copy JSON."
     }
   </script>
   <!-- Google tag (gtag.js) -->
@@ -37,24 +37,17 @@
       darkMode: "class"
     };
   </script>
-  <link rel="stylesheet" href="style.css?v=20260525-5">
+  <link rel="stylesheet" href="../style.css?v=20260525-5">
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-900 transition-colors duration-200 dark:bg-slate-950 dark:text-slate-100">
   <main class="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-5 px-4 py-5 sm:px-6 lg:px-8">
     <header class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <h1 class="text-2xl font-semibold tracking-tight sm:text-3xl">JSON Formatter & Beautifier</h1>
-        <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Format, minify, copy, validate, and encode JSON in your browser.</p>
+        <h1 class="text-2xl font-semibold tracking-tight sm:text-3xl">Escaped JSON Encoder</h1>
+        <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">Encode JSON into escaped JSON strings, then copy the result for Talend or developer workflows.</p>
       </div>
 
-      <button
-        id="themeToggle"
-        type="button"
-        class="inline-flex h-10 items-center justify-center rounded-md border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800 dark:focus:ring-offset-slate-950"
-        aria-pressed="false"
-      >
-        Dark Mode
-      </button>
+      <button id="themeToggle" type="button" class="inline-flex h-10 items-center justify-center rounded-md border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800 dark:focus:ring-offset-slate-950" aria-pressed="false">Dark Mode</button>
     </header>
 
     <section class="grid flex-1 gap-4 lg:grid-cols-[1fr_auto_1fr]">
@@ -72,20 +65,8 @@
           </div>
         </div>
         <div class="code-editor relative min-h-0 flex-1 overflow-hidden" style="position: relative; min-height: 0; flex: 1; overflow: hidden;">
-          <pre
-            id="inputHighlight"
-            class="highlight-layer absolute inset-0 m-0 overflow-auto"
-            style="position: absolute; inset: 0; margin: 0; overflow: auto;"
-            aria-hidden="true"
-          ></pre>
-          <textarea
-            id="jsonInput"
-            class="code-area input-code-area absolute inset-0 h-full w-full"
-            style="position: absolute; inset: 0; width: 100%; height: 100%;"
-            spellcheck="false"
-            wrap="off"
-            placeholder='{"name":"JSON Beauty","features":["format","minify","copy"]}'
-          ></textarea>
+          <pre id="inputHighlight" class="highlight-layer absolute inset-0 m-0 overflow-auto" style="position: absolute; inset: 0; margin: 0; overflow: auto;" aria-hidden="true"></pre>
+          <textarea id="jsonInput" class="code-area input-code-area absolute inset-0 h-full w-full" style="position: absolute; inset: 0; width: 100%; height: 100%;" spellcheck="false" wrap="off" placeholder='{"customer":{"name":"John"}}'></textarea>
         </div>
       </div>
 
@@ -109,26 +90,19 @@
             </button>
           </div>
         </div>
-        <textarea
-          id="jsonOutput"
-          class="code-area"
-          spellcheck="false"
-          wrap="off"
-          readonly
-          placeholder="Formatted JSON will appear here."
-        ></textarea>
+        <textarea id="jsonOutput" class="code-area" spellcheck="false" wrap="off" readonly placeholder="Encoded JSON string will appear here."></textarea>
       </div>
     </section>
 
     <p id="errorMessage" class="min-h-6 text-sm font-medium text-red-600 dark:text-red-400" role="alert" aria-live="polite"></p>
 
     <nav class="flex flex-wrap gap-x-4 gap-y-2 text-sm text-slate-500 dark:text-slate-400" aria-label="JSON tools">
-      <a class="hover:text-blue-600 dark:hover:text-blue-400" href="./json-formatter/">JSON Formatter</a>
-      <a class="hover:text-blue-600 dark:hover:text-blue-400" href="./json-validator/">JSON Validator</a>
-      <a class="hover:text-blue-600 dark:hover:text-blue-400" href="./escaped-json-encoder/">Escaped JSON Encoder</a>
+      <a class="hover:text-blue-600 dark:hover:text-blue-400" href="../json-formatter/">JSON Formatter</a>
+      <a class="hover:text-blue-600 dark:hover:text-blue-400" href="../json-validator/">JSON Validator</a>
+      <a class="hover:text-blue-600 dark:hover:text-blue-400" href="../escaped-json-encoder/">Escaped JSON Encoder</a>
     </nav>
   </main>
 
-  <script src="app.js?v=20260525-5"></script>
+  <script src="../app.js?v=20260525-5"></script>
 </body>
 </html>
