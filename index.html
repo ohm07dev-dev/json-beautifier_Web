@@ -45,12 +45,16 @@
           <label for="jsonInput" class="text-sm font-semibold">Input JSON</label>
           <span class="text-xs text-slate-500 dark:text-slate-400">Raw JSON</span>
         </div>
-        <textarea
-          id="jsonInput"
-          class="code-area"
-          spellcheck="false"
-          placeholder='{"name":"JSON Beauty","features":["format","minify","copy"]}'
-        ></textarea>
+        <div class="code-editor">
+          <pre id="inputHighlight" class="highlight-layer" aria-hidden="true"></pre>
+          <textarea
+            id="jsonInput"
+            class="code-area input-code-area"
+            spellcheck="false"
+            wrap="off"
+            placeholder='{"name":"JSON Beauty","features":["format","minify","copy"]}'
+          ></textarea>
+        </div>
       </div>
 
       <div class="flex flex-wrap items-center justify-center gap-2 lg:w-32 lg:flex-col">
@@ -69,6 +73,7 @@
           id="jsonOutput"
           class="code-area"
           spellcheck="false"
+          wrap="off"
           readonly
           placeholder="Formatted JSON will appear here."
         ></textarea>

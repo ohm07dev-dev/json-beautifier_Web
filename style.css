@@ -52,6 +52,58 @@
   overflow: auto;
 }
 
+.code-editor {
+  position: relative;
+  min-height: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.highlight-layer {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  overflow: auto;
+  padding: 16px;
+  pointer-events: none;
+  color: rgb(15 23 42);
+  font-family: Consolas, Monaco, "Courier New", monospace;
+  font-size: 14px;
+  line-height: 1.65;
+  tab-size: 2;
+  white-space: pre;
+}
+
+.dark .highlight-layer {
+  color: rgb(241 245 249);
+}
+
+.input-code-area {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: transparent;
+  caret-color: rgb(15 23 42);
+}
+
+.dark .input-code-area {
+  caret-color: rgb(241 245 249);
+}
+
+.json-error-token {
+  text-decoration-line: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: rgb(220 38 38);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+  background: rgb(254 226 226 / 0.75);
+}
+
+.dark .json-error-token {
+  background: rgb(127 29 29 / 0.45);
+}
+
 .code-area::placeholder {
   color: rgb(148 163 184);
 }
