@@ -19,7 +19,7 @@
       darkMode: "class"
     };
   </script>
-  <link rel="stylesheet" href="style.css?v=20260525-2">
+  <link rel="stylesheet" href="style.css?v=20260525-5">
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-900 transition-colors duration-200 dark:bg-slate-950 dark:text-slate-100">
   <main class="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-5 px-4 py-5 sm:px-6 lg:px-8">
@@ -43,7 +43,15 @@
       <div class="editor-panel">
         <div class="editor-header">
           <label for="jsonInput" class="text-sm font-semibold">Input JSON</label>
-          <span class="text-xs text-slate-500 dark:text-slate-400">Raw JSON</span>
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-slate-500 dark:text-slate-400">Raw JSON</span>
+            <button id="copyInputBtn" type="button" class="icon-btn" title="Copy input" aria-label="Copy input">
+              <svg viewBox="0 0 24 24" aria-hidden="true" class="h-4 w-4">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </button>
+          </div>
         </div>
         <div class="code-editor relative min-h-0 flex-1 overflow-hidden" style="position: relative; min-height: 0; flex: 1; overflow: hidden;">
           <pre
@@ -66,14 +74,22 @@
       <div class="flex flex-wrap items-center justify-center gap-2 lg:w-32 lg:flex-col">
         <button id="formatBtn" type="button" class="action-btn primary-btn">Beautify</button>
         <button id="minifyBtn" type="button" class="action-btn">Minify</button>
-        <button id="copyBtn" type="button" class="action-btn">Copy</button>
+        <button id="escapeBtn" type="button" class="action-btn">Encode JSON String</button>
         <button id="clearBtn" type="button" class="action-btn danger-btn">Clear</button>
       </div>
 
       <div class="editor-panel">
         <div class="editor-header">
           <label for="jsonOutput" class="text-sm font-semibold">Output</label>
-          <span id="statusText" class="text-xs text-slate-500 dark:text-slate-400">Ready</span>
+          <div class="flex items-center gap-2">
+            <span id="statusText" class="text-xs text-slate-500 dark:text-slate-400">Ready</span>
+            <button id="copyBtn" type="button" class="icon-btn" title="Copy output" aria-label="Copy output">
+              <svg viewBox="0 0 24 24" aria-hidden="true" class="h-4 w-4">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </button>
+          </div>
         </div>
         <textarea
           id="jsonOutput"
@@ -89,6 +105,6 @@
     <p id="errorMessage" class="min-h-6 text-sm font-medium text-red-600 dark:text-red-400" role="alert" aria-live="polite"></p>
   </main>
 
-  <script src="app.js?v=20260525-2"></script>
+  <script src="app.js?v=20260525-5"></script>
 </body>
 </html>

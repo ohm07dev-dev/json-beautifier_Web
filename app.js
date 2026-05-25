@@ -8,6 +8,8 @@ const themeToggle = document.getElementById("themeToggle");
 
 const formatBtn = document.getElementById("formatBtn");
 const minifyBtn = document.getElementById("minifyBtn");
+const escapeBtn = document.getElementById("escapeBtn");
+const copyInputBtn = document.getElementById("copyInputBtn");
 const copyBtn = document.getElementById("copyBtn");
 const clearBtn = document.getElementById("clearBtn");
 
@@ -343,20 +345,32 @@ minifyBtn.addEventListener("click", () => {
   handleJsonAction((json) => JSON.stringify(json), "Minified");
 });
 
-copyBtn.addEventListener("click", async () => {
+escapeBtn.addEventListener("click", () => {
+  handleJsonAction((json) => JSON.stringify(JSON.stringify(json)), "Encoded");
+});
+
+async function copyText(value, emptyMessage, successMessage) {
   setError("");
 
-  if (!output.value) {
-    setError("Nothing to copy. Please format or minify JSON first.");
+  if (!value) {
+    setError(emptyMessage);
     return;
   }
 
   try {
-    await navigator.clipboard.writeText(output.value);
-    setStatus("Copied");
+    await navigator.clipboard.writeText(value);
+    setStatus(successMessage);
   } catch (error) {
-    setError("Unable to copy to clipboard. Please copy the output manually.");
+    setError("Unable to copy to clipboard. Please copy it manually.");
   }
+}
+
+copyInputBtn.addEventListener("click", async () => {
+  await copyText(input.value, "Nothing to copy from input.", "Input copied");
+});
+
+copyBtn.addEventListener("click", async () => {
+  await copyText(output.value, "Nothing to copy. Please beautify, minify, or encode JSON first.", "Output copied");
 });
 
 clearBtn.addEventListener("click", () => {
